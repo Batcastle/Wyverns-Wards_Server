@@ -3,6 +3,10 @@
 
 Wyverns & Wards (W&W), is a digital D&D recreation which allows users to play with their friends over the web.
 
+# NOTICE
+
+## Wyverns & Wards is still under active development, and is still in the pre-alpha stages
+
 ### Special Features!!!
 
 #### **DM-less mode**
