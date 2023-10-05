@@ -17,7 +17,7 @@ Got a group of friends to play D&D, but no one wants to DM? That's okay! Let the
 
 Play a simple game of D&D with the computer. This is great for users who want to learn the basics of how to play but don't have a party who can teach them yet.
 
-#### *Mod-able**
+#### **Mod-able**
 
 Mod in packs of monsters, powerful new spells, funny items, insane events, even more insane NPCs, overpowered cantrips, feats, and more!
 
