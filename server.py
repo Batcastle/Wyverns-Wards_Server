@@ -24,7 +24,7 @@
 """Explain what this program does here!!!"""
 from __future__ import print_function
 import sys
-from flask_restful import Api, Resource
+import random
 from flask import Flask
 
 
@@ -38,21 +38,59 @@ if sys.version_info[0] == 2:
     exit(2)
 
 APP = Flask(__name__)
-API = Api(APP)
 
 
-def connect_api(obj, api=API, path="/"):
-    """Decorator to make adding API paths easier"""
-    api.add_resource(obj, path)
-    return obj
+def generate_session_key():
+        """Generate a random string that follows these rules:
+        - 8-64 characters long
+        - Characters should be a randomly generated string of letters and numbers
+        """
+        remaining_len = random.randint(8, 64)
+        allowed_letters = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K",
+                           "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+                           "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e",
+                           "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+                           "p", "q", "r", "s", "t", "u", "v", "w", "x", "y",
+                           "z"]
+        allowed_numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        allowed_special = ["@", ":", ";", "&", "$", "%", "*", "+", "=", "-",
+                           "_", "~", ",", "."]
+        string = []
+        while remaining_len > 0:
+            choice = random.randint(0, 100) % 3
+            if choice == 0:
+                # letter
+                string.append(random.sample(allowed_letters, 1)[0])
+            elif choice == 1:
+                # special
+                string.append(random.sample(allowed_special, 1)[0])
+            else:
+                # number
+                string.append(random.sample(allowed_numbers, 1)[0])
+            remaining_len -= 1
+        string = "".join(string)
+        return string
+
+keys = []
+
+@APP.route("/get_key")
+def get_key():
+    """Create new key
+    This will follow a given session through to the end.
+    A given client needs a key to interact with the server in any way.
+    """
+    key = generate_session_key()
+    keys.append(key)
+    return {"Session Key": key, "Access": f"http://192.168.1.59:5000/{ key }"}
 
 
-@connect_api
-class HelloResource(Resource):
-    def get(self):
-        return {'Hello': 'World!'}
-
-
+@APP.route("/<key>")
+def KeyAccept(key):
+    """Quick and dirty key test. If a client gets 500, request a new key."""
+    if key in keys:
+        return {"Status": 200}
+    return {"Status": 500}
+    
 
 if __name__ == "__main__":
     # get length of argv
